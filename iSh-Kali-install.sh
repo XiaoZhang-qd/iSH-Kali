@@ -13,6 +13,12 @@ SCRIPT_NAME=$(basename "$0")
 VERSION="1.0"
 # 定义脚本的下载地址 - 使用占位符，用户需要替换为实际有效的地址
 DOWNLOAD_URL="https://example.com/kali-ios-rootfs.tar.gz"
+# 定义脚本文件的URL
+UPDETA_SCRIPT_URL="https://iSH-Kali.github.io/iSH-Kali-install.sh"
+# 定义远程版本文件地址
+REMOTE_VERSION_URL="https://iSH-Kali.github.io/version.txt"
+# 定义快捷指令工具显示地址
+SHORTCUTS_URL="https://iSH-Kali.github.io/shortcuts.txt"
 
 # 颜色代码
 RED='\033[0;31m' # 红色
@@ -285,8 +291,6 @@ install_kali() {
 update_script() {
     # 更新安装脚本
     echo -e "${GREEN}开始更新安装脚本${NC}\n"
-    # 定义远程版本文件地址
-    REMOTE_VERSION_URL="https://xiaozhang-qd.github.io/version.txt"
     # 检查是否有安装有curl
     if ! command -v curl &> /dev/null; then
         echo -e "${RED}curl 未安装，正在安装...${NC}"
@@ -352,8 +356,6 @@ update_script() {
 
 # 检查更新
 check_update() {
-    # 定义远程版本文件地址
-    REMOTE_VERSION_URL="https://xiaozhang-qd.github.io/version.txt"
     # 检查是否有安装有curl
     if ! command -v curl &> /dev/null; then
         echo -e "${RED}curl 未安装，正在安装...${NC}"
@@ -382,7 +384,7 @@ check_update() {
 # 显示快捷指令工具
 shortcuts() {
     echo -e "${CYAN}\n快捷指令工具：${NC}"
-    curl -s https://xiaozhang-qd.github.io/shortcuts.txt | while IFS= read -r line; do
+    curl -s "${SHORTCUTS_URL}" | while IFS= read -r line; do
         echo -e "${CYAN}$line${NC}"
     done
 }
