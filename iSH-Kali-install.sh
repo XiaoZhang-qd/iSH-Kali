@@ -153,54 +153,65 @@ show_kali_install_method() {
 # 安装iSH-tool
 install_iSH-Tools() {
     # 让用户确认
+    # 安装iSH-tool\minstall_iSH-Tools() {
     # 检查是否已经安装了iSH-Tools
     if command -v iSH-Tools &> /dev/null; then
         echo -e "${GREEN}iSH-Tools 已经安装${NC}"
         return
     fi
+    
     # 提示用户是否开始安装iSH-Tools
-    read -p "是否开始安装iSH-Tools？(y/n) " confirm
+    read -p "是否开始安装iSH-Tools？(Y/n) " confirm
+    
+    # 处理用户选择
     if [[ "$confirm" =~ ^([Yy]|)$ ]]; then
         echo -e "${GREEN}开始安装iSH-Tools${NC}\n"
+        
         # 更新源和软件包
         echo -e "${YELLOW}更新源和软件包...${NC}"
         sudo apk update
         
-        # 安装常用工具（已注释，用户可根据需要取消注释）
-        # echo -e "${YELLOW}安装常用工具...${NC}"
-        # tools=()"vim" "nano" "git" "wget" "curl" "openssh" "ncurses" "htop")
-        # for tool in "${tools[@]}"; do
-        #     if ! command -v "$tool" &> /dev/null; then
-        #         echo -e "${YELLOW}正在安装${tool}${NC}"
-        #         sudo apk add "$tool"
-        #         if command -v "$tool" &> /dev/null; then
-        #             echo -e "${GREEN}${tool} 安装成功${NC}"
-        #         else
-        #             echo -e "${RED}${tool} 安装失败${NC}"
-        #         fi
-        #     else
-        #         echo -e "${GREEN}${tool} 已经安装${NC}"
-        #     fi
-        # done
-        
-        # 安装iSH-Tools
-        echo -e "${YELLOW}安装iSH-Tools...${NC}"
-        sudo apk add iSH-Tools
-        if command -v iSH-Tools &> /dev/null; then
-            echo -e "${GREEN}iSH-Tools 安装成功${NC}"
-        else
-            echo -e "${RED}iSH-Tools 安装失败${NC}"
+        # 检查更新是否成功
+        if [ $? -ne 0 ]; then
+            echo -e "${RED}更新源和软件包失败${NC}"
+            return
         fi
         
-        echo -e "${GREEN}iSH-Tools安装完成${NC}\n"
+        # 尝试使用wget安装
+        echo -e "${YELLOW}正在安装iSH-Tools...${NC}"
+        sh -c "$(wget -qO- https://github.com/lurenJBD/iSH-Tools/raw/main/iSH-Tools-Setup-CN.sh)"
+        
+        # 如果wget安装失败，尝试使用curl
+        if [ $? -ne 0 ]; then
+            echo -e "${RED}iSH-Tools wget安装失败${NC}"
+            echo -e "${YELLOW}尝试使用curl安装iSH-Tools...${NC}"
+            sh -c "$(curl -fsSL https://github.com/lurenJBD/iSH-Tools/raw/main/iSH-Tools-Setup-CN.sh)"
+            
+            # 检查curl安装是否成功
+            if [ $? -ne 0 ]; then
+                echo -e "${RED}curl安装iSH-Tools失败${NC}"
+                return
+            fi
+            echo -e "${GREEN}curl安装iSH-Tools成功${NC}\n"
+        else
+            echo -e "${GREEN}wget安装iSH-Tools成功${NC}\n"
+        fi
+        
+        # 再次验证安装
+        if command -v iSH-Tools &> /dev/null; then
+            echo -e "${GREEN}iSH-Tools 安装完成${NC}\n"
+        else
+            echo -e "${RED}iSH-Tools 安装失败，请手动安装${NC}\n"
+        fi
+        
     elif [[ "$confirm" =~ ^[Nn]$ ]]; then
         echo -e "${RED}已取消安装${NC}\n"
         return
     else
         echo -e "${RED}无效选择，请重新输入。${NC}"
-        # 避免递归调用，使用循环
+        # 使用循环重新询问，避免递归调用
         while true; do
-            read -p "是否开始安装iSH-Tools？(y/n) " confirm
+            read -p "是否开始安装iSH-Tools？(Y/n) " confirm
             if [[ "$confirm" =~ ^([Yy]|)$ ]]; then
                 install_iSH-Tools
                 return
@@ -379,41 +390,54 @@ shortcuts() {
 # 让用户选择其他功能
 select_other_features() {
     while true; do
-        # 清空屏幕
+        # 清空屏幕并重置终端滚动缓冲区
+        printf "\033c"
         clear
+        
         # 显示ASCII图标
         ASCII_logo
 
+        # 显示菜单
+        sleep 0.01
         echo -e "${CYAN}请选择其他操作：${NC}"
+        sleep 0.01
         echo -e "${CYAN}1. 仅安装Kali${NC}"
+        sleep 0.01
         echo -e "${CYAN}2. 安装Kali + iSH-Tools${NC}"
+        sleep 0.01
         echo -e "${CYAN}3. 安装Kali + iSH-Tools + 快捷指令的工具${NC}"
+        sleep 0.01
         echo -e "${CYAN}4. 安装Kali + 快捷指令的工具${NC}"
+        sleep 0.01
         echo -e "${CYAN}5. 更新安装脚本${NC}"
+        sleep 0.01
         echo -e "${CYAN}6. 检查更新${NC}"
+        sleep 0.01
         echo -e "${CYAN}7. 重新运行脚本${NC}"
+        sleep 0.01
         echo -e "${CYAN}0. 退出程序${NC}"
+        sleep 0.01
         read -p "请输入您的选择（1/2/3/4/5/6/7/0）：" choice
 
         # 检查输入是否为数字
         if ! [[ "$choice" =~ ^[0-9]+$ ]]; then
             echo -e "${RED}无效选择，请输入数字。${NC}"
-            echo -e "${YELLOW}按Enter键继续...${NC}"
-            read
+            sleep 1  # 给用户时间看到错误信息
             continue
         fi
 
         case $choice in
             1)  # 仅安装Kali
                 echo -e "你选择了${YELLOW}仅安装Kali${NC}"
+                # 安装Kali
                 install_kali
-                return 0
+                sleep 1  # 显示结果后延迟1秒
                 ;;
             2)  # 安装Kali + iSH-Tools
                 echo -e "你选择了${YELLOW}安装Kali + iSH-Tools${NC}"
                 install_kali
                 install_iSH-Tools
-                return 0
+                sleep 1  # 显示结果后延迟1秒
                 ;;
             3)  # 安装Kali + iSH-Tools + 快捷指令的工具
                 echo -e "你选择了${YELLOW}安装Kali + iSH-Tools + 快捷指令的工具${NC}"
@@ -430,7 +454,7 @@ select_other_features() {
                 
                 # 显示快捷指令工具
                 shortcuts
-                return 0
+                sleep 1  # 显示结果后延迟1秒
                 ;;
             4)  # 安装Kali + 快捷指令的工具
                 echo -e "你选择了${YELLOW}安装Kali + 快捷指令的工具${NC}"
@@ -438,21 +462,22 @@ select_other_features() {
                 
                 # 显示快捷指令工具
                 shortcuts
-                return 0
+                sleep 1  # 显示结果后延迟1秒
                 ;;
             5)  # 更新安装脚本
                 echo -e "你选择了${YELLOW}更新安装脚本${NC}"
                 update_script
-                return 0
+                sleep 1  # 显示结果后延迟1秒
                 ;;
             6)  # 检查更新
                 echo -e "你选择了${YELLOW}检查更新${NC}"
                 check_update
-                return 0
+                sleep 1  # 显示结果后延迟1秒
                 ;;
             7)  # 重新运行脚本
                 echo -e "你选择了${YELLOW}重新运行脚本${NC}"
-                return 1
+                main
+                return  # 重新运行后返回
                 ;;
             0)  # 退出程序
                 clear
@@ -462,8 +487,7 @@ select_other_features() {
                 ;;
             *)  # 无效选择
                 echo -e "${RED}无效选择，请重新输入。${NC}"
-                echo -e "${YELLOW}按Enter键继续...${NC}"
-                read
+                sleep 1  # 给用户时间看到错误信息
                 ;;
         esac
     done
@@ -471,55 +495,45 @@ select_other_features() {
 
 # 主函数
 main() {
-    while true; do
-        # 清空屏幕并重置终端滚动缓冲区
-        printf "\033c"
-        clear
-        # 向用户显示ASCII图标
-        ASCII_logo
-        # 项目介绍
-        # Project_Introduction
-        
-        # 向用户确认是否开启后台
-        echo -e "${YELLOW}\n是否开启iSH应用的后台运行？(y/n)${NC}"
-        # 读取用户输入
-        read -p "请输入您的选择(y/n)：" background_choice
-        # 检查用户输入
-        if [[ "$background_choice" =~ ^[Yy]$ ]]; then
-            echo -e "${GREEN}已开启iSH应用的后台运行${NC}"
-            echo -e "${GREEN}记得在设置-->隐私与安全性-->定位服务-->iSH 中把允许访问位置信息设置为始终${NC}"
-            break
-        elif [[ "$background_choice" =~ ^([Nn]|)$ ]]; then
-            echo -e "${RED}未开启iSH应用的后台运行${NC}"
-            echo -e "${RED}请开启iSH应用的后台运行，否则会因为被杀后台导致安装过程中断或失败除非您可以一直让iSH保持前台运行${NC}"
-            echo -e "${YELLOW}按Enter键继续...${NC}"
-            read
-        else
-            echo -e "${RED}无效选择，请重新输入。${NC}"
-        fi
-    done
+    # 清空屏幕并重置终端滚动缓冲区
+    printf "\033c"
+    clear
+    # 向用户显示ASCII图标
+    ASCII_logo
+    # 项目介绍
+    # Project_Introduction
     
-    while true; do
-        # 向用户确认和检查并添加脚本权限
-        read -p "是否开始添加脚本权限？(y/n) " confirm
-        if [[ "$confirm" =~ ^([Yy]|)$ ]]; then
-            Permission
-            break
-        elif [[ "$confirm" =~ ^[Nn]$ ]]; then
-            printf "${RED}已取消添加脚本权限，必须要添加脚本权限才可以使用其他功能${NC}\n"
-            return
-        else
-            echo -e "${RED}无效选择，请重新输入。${NC}"
-        fi
-    done
+    # 向用户确认是否开启后台
+    echo -e "${YELLOW}\n是否开启iSH应用的后台运行？(y/n)${NC}"
+    # 读取用户输入
+    read -p "请输入您的选择(y/n)：" background_choice
+    # 检查用户输入
+    if [[ "$background_choice" =~ ^[Yy]$ ]]; then
+        echo -e "${GREEN}已开启iSH应用的后台运行${NC}"
+        echo -e "${GREEN}记得在设置-->隐私与安全性-->定位服务-->iSH 中把允许访问位置信息设置为始终${NC}"
+    elif [[ "$background_choice" =~ ^([Nn]|)$ ]]; then
+        echo -e "${RED}未开启iSH应用的后台运行${NC}"
+        echo -e "${RED}请开启iSH应用的后台运行，否则会因为被杀后台导致安装过程中断或失败除非您可以一直让iSH保持前台运行${NC}"
+    else
+        echo -e "${RED}无效选择，输入默认视为不开启iSH应用的后台运行${NC}"
+        echo -e "${RED}请开启iSH应用的后台运行，否则会因为被杀后台导致安装过程中断或失败除非您可以一直让iSH保持前台运行${NC}"
+    fi
     
+    # 向用户确认和检查并添加脚本权限
+    read -p "是否开始添加脚本权限？(y/n) " confirm
+    if [[ "$confirm" =~ ^([Yy]|)$ ]]; then
+        Permission
+    elif [[ "$confirm" =~ ^[Nn]$ ]]; then
+        printf "${RED}已取消添加脚本权限，必须要添加脚本权限才可以使用其他功能${NC}\n"
+        return
+    else
+        echo -e "${RED}无效选择，输入默认视为不添加脚本权限${NC}"
+        printf "${RED}已取消添加脚本权限，必须要添加脚本权限才可以使用其他功能${NC}\n"
+        return
+    fi
+
     # 调用功能选择菜单
-    while true; do
-        select_other_features
-        if [ $? -ne 1 ]; then  # 如果不是选择重新运行，则退出循环
-            break
-        fi
-    done
+    select_other_features
 }
 
 # 执行主函数
