@@ -66,16 +66,14 @@ Permission() {
 }
 
 # 检查脚本名称
-SHECK_SCRIPT_NAME() {
+CHECK_SCRIPT_NAME() {
     # 如果当前脚本名称不是$DEFINE_SCRIPT_NAME就提示用户脚本名称不对
-    if [ ${SCRIPT_NAME} = ${DEFINE_SCRIPT_NAME} ]; then
-        echo -e "脚本名称${GREEN}正确${NC}: ${SCRIPT_NAME}"
-    elif [ ${SCRIPT_NAME} != ${DEFINE_SCRIPT_NAME} ]; then
-        echo -e "脚本名称${GREEN}错误${NC}: ${SCRIPT_NAME}"
+    if [ "${SCRIPT_NAME}" = "${DEFINE_SCRIPT_NAME}" ]; then
+        echo -e "脚本名称${GREEN}正确${NC}: ${YELLOW}${SCRIPT_NAME}${NC}"
+    else
+        echo -e "脚本名称${RED}错误${NC}: ${YELLOW}${SCRIPT_NAME}${NC}"
     fi
-    # 询问用户是否更改脚本名称
-
-｝
+}
 
 # 定义ASCII图标
 ASCII_logo() {
