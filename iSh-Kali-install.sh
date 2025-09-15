@@ -9,6 +9,10 @@ fi
 
 # 获取当前脚本名称
 SCRIPT_NAME=$(basename "$0")
+# 获取脚本所在目录（相对路径）
+SCRIPT_DIR=$(dirname "$0")
+# 定义脚本所使用的名称
+DEFINE_SCRIPT_NAME="iSH-Kali-install.sh"
 # 定义脚本版本号
 VERSION="1.0"
 # 定义脚本的下载地址 - 使用占位符，用户需要替换为实际有效的地址
@@ -42,24 +46,36 @@ NC='\033[0m' # 无颜色/重置颜色
 # 给脚本添加相应的权限
 Permission() {
     # 检查脚本是否已经有执行权限
-    if [ -x "./$SCRIPT_NAME" ]; then
+    if [ -x "${SCRIPT_DIR}/${SCRIPT_NAME}" ]; then
         echo -e "${GREEN}脚本 ${SCRIPT_NAME} 已经有执行权限，无需重复操作${NC}"
         return
     fi
     # 提示用户此脚本无权限
-    echo -e "${LIGHT_RED}脚本 ${SCRIPT_NAME} 无执行权限，需要添加权限${NC}"
+    echo -e "${LIGHT_RED}脚本: ${SCRIPT_NAME} 无执行权限，需要添加权限${NC}"
     # 提示用户正在添加权限
     echo -e "${YELLOW}正在给脚本： ${SCRIPT_NAME} 添加可执行权限${NC}"
     # 使用 chmod +x 添加可执行权限，避免使用不安全的 7777 权限
-    chmod +x "./$SCRIPT_NAME"
+    chmod +x "${SCRIPT_DIR}/${SCRIPT_NAME}"
     # 检查权限添加是否成功
-    if [ -x "./$SCRIPT_NAME" ]; then
-        echo -e "${GREEN}脚本 ${SCRIPT_NAME} 已成功添加可执行权限${NC}"
+    if [ -x "${SCRIPT_DIR}/${SCRIPT_NAME}" ]; then
+        echo -e "${GREEN}脚本: ${SCRIPT_NAME} 已成功添加可执行权限${NC}"
     else
-        echo -e "${RED}脚本 ${SCRIPT_NAME} 添加可执行权限失败，可能是权限不足或文件系统只读，请检查后重试${NC}"
+        echo -e "${RED}脚本: ${SCRIPT_NAME} 添加可执行权限失败，可能是权限不足或文件系统只读，请检查后重试${NC}"
         return 1
     fi
 }
+
+# 检查脚本名称
+SHECK_SCRIPT_NAME() {
+    # 如果当前脚本名称不是$DEFINE_SCRIPT_NAME就提示用户脚本名称不对
+    if [ ${SCRIPT_NAME} = ${DEFINE_SCRIPT_NAME} ]; then
+        echo -e "脚本名称${GREEN}正确${NC}: ${SCRIPT_NAME}"
+    elif [ ${SCRIPT_NAME} != ${DEFINE_SCRIPT_NAME} ]; then
+        echo -e "脚本名称${GREEN}错误${NC}: ${SCRIPT_NAME}"
+    fi
+    # 询问用户是否更改脚本名称
+
+｝
 
 # 定义ASCII图标
 ASCII_logo() {
