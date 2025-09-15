@@ -25,17 +25,17 @@
 - **注意事项**: 请确保iSH应用已开启后台运行模式
 
 ## 功能特性
-- 一键安装Kali Linux环境
+- 一键下载Kali Linux的系统文件（安装想要手动安装）
 - 支持多种安装选项组合
 - 自动设置脚本权限
 - 提供ASCII艺术图标显示
 - 脚本版本检查与自动更新
 - 安装iSH-Tools工具集
-- 显示快捷指令工具
+- 显示快捷指令工具的安装链接
 
 ## 更新预告
 - 下个版本将使用Dialog来显示操作UI
-- 下个版本将更新更多功能
+- 下个版本将加入的更多功能
 - 下个版本将和其他开发者一起合作开发这个项目
 
 ## 安装准备
@@ -57,11 +57,29 @@
    ```
 2. 在iSH中，通过git来运行安装脚本
    ```git
-   sudo git clone https://github.com/xiaozhang-qd/ish-kali.git && cd ish-kali && bash ./ish-kali-install.sh
+   sudo git clone https://github.com/xiaozhang-qd/ish-kali.git && cd ish-kali && bash ./iSH-Kali-install.sh
    ```
 
-   脚本将自动执行安装过程，包括下载Kali Linux镜像、安装依赖软件包、配置环境等。
-   安装完成后，您可以在iSH应用中启动Kali Linux环境。
+## 安装方法：
+
+  选择安装Kali的方法：
+
+   从iSH应用开始：
+    进入设置[齿轮图标]
+    点击文件系统[Filesystems]
+    点击导入[Import]
+    选择下载下来的Kali根文件系统tar归档文件并选择它
+    等待iSH应用完全导入该文件
+    选择您导入的Kali文件
+    最后点击从此文件系统启动[Boot From This Filesystem]
+    iSH应用会崩溃，不用担心，这是正常现象！再次启动iSH应用，等待其启动到新的文件系统
+    现在您进入了Alpine系统，它作为恢复操作系统。从此处运行启动脚本以初始化Kali Linux环境：./kali.sh  
+
+   恭喜！您现在可以在iOS设备上以文本模式使用完整的Kali Linux了
+
+   要退出Kali环境，只需输入  exit 
+    要退出iSH应用，只需再次输入  exit (注意：在ipad的iSH输入里  exit 可以退出，但iPhone的iSH里输入  exit 不会退出而是重启iSH
+    
    首次启动时，系统会要求您设置root密码。请根据提示输入密码并确认。
    完成后，您可以使用`kali`用户名和您设置的密码登录Kali Linux环境。
    登录后，您可以使用`startkali`命令启动Kali Linux环境。
@@ -73,3 +91,4 @@
    若要重新安装脚本，请重复以上步骤。
 
    注意：卸载脚本时，会删除Kali Linux环境和相关配置。请确保您已备份重要数据。
+
