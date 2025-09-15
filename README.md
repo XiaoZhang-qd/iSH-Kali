@@ -31,7 +31,12 @@
 - 提供ASCII艺术图标显示
 - 脚本版本检查与自动更新
 - 安装iSH-Tools工具集
-- 支持快捷指令工具
+- 显示快捷指令工具
+
+## 更新预告
+- 下个版本将使用Dialog来显示操作UI
+- 下个版本将更新更多功能
+- 下个版本将和其他开发者一起合作开发这个项目
 
 ## 安装准备
 1. 在App Store下载并安装**iSH**应用
@@ -42,15 +47,18 @@
 5. 下载此脚本到您的设备
 
 ## 安装步骤
-1. 在iSH中，通过wget或curl运行安装脚本
+1. 在iSH中，通过wget或curl来运行安装脚本
    ```bash
-   sudo bash "$(curl -fsSL https://raw.githubusercontent.com/XiaoZhang-qd/iSH-Kali/main/iSH-Kali-install.sh)"
+   sudo bash "$(curl -fsSL https://ish-kali.github.io/iSH-Kali/iSH-Kali-install.sh)"
    ```
     或者
    ```bash
-   sudo bash "$(wget -O - https://raw.githubusercontent.com/XiaoZhang-qd/iSH-Kali/main/iSH-Kali-install.sh)"
+   sudo bash "$(wget -O - https://ish-kali.github.io/iSH-Kali/iSH-Kali-install.sh)"
    ```
-
+2. 在iSH中，通过git来运行安装脚本
+   ```git
+   sudo git clone https://github.com/xiaozhang-qd/ish-kali.git && cd ish-kali && bash ./ish-kali-install.sh
+   ```
 
    脚本将自动执行安装过程，包括下载Kali Linux镜像、安装依赖软件包、配置环境等。
    安装完成后，您可以在iSH应用中启动Kali Linux环境。
@@ -63,4 +71,5 @@
    卸载时，脚本会提示确认操作。请输入`y`确认卸载。
    卸载完成后，您可以删除脚本文件。
    若要重新安装脚本，请重复以上步骤。
+
    注意：卸载脚本时，会删除Kali Linux环境和相关配置。请确保您已备份重要数据。
